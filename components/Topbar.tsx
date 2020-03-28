@@ -1,11 +1,13 @@
+import AlertCard from "./AlertCard"
 import MessageCard from "./MessageCard"
 import React, { useState, useEffect } from "react";
+import { userInfo } from "os";
 
 
-const Topbar = () => {
+const Topbar = ({user}) => {
     const [messages, setMessages] = useState([]);
     const [alerts, setAlerts] = useState([]);
-    useEffect(()=>{
+    useEffect(() => {
         setMessages([
             {
                 id: 1,
@@ -29,7 +31,7 @@ const Topbar = () => {
                 message: "Hi there! I am wondering if you can help me with a problem I've been having.",
                 time: new Date().getTime() - (6 * 40 * 60 * 1000)
             },
-    
+
         ])
         setAlerts([
             {
@@ -43,7 +45,7 @@ const Topbar = () => {
                 message: "A new monthly report is ready to download!"
             },
         ]);
-    });    
+    },[]);
     return <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
         {/*  Topbar  */}
 
@@ -92,46 +94,19 @@ const Topbar = () => {
                 <a className="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i className="fas fa-bell fa-fw"></i>
                     {/*  Counter - Alerts  */}
-                    <span className="badge badge-danger badge-counter">3+</span>
+                    {alerts ?
+                        <span className="badge badge-danger badge-counter">{alerts.length}</span>
+                        : ''}
                 </a>
                 {/*  Dropdown - Alerts  */}
                 <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
                     <h6 className="dropdown-header">
                         Alerts Center
                 </h6>
-                    <a className="dropdown-item d-flex align-items-center" href="#">
-                        <div className="mr-3">
-                            <div className="icon-circle bg-primary">
-                                <i className="fas fa-file-alt text-white"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="small text-gray-500">December 12, 2019</div>
-                            <span className="font-weight-bold">A new monthly report is ready to download!</span>
-                        </div>
-                    </a>
-                    <a className="dropdown-item d-flex align-items-center" href="#">
-                        <div className="mr-3">
-                            <div className="icon-circle bg-success">
-                                <i className="fas fa-donate text-white"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="small text-gray-500">December 7, 2019</div>
-                            $290.29 has been deposited into your account!
-                  </div>
-                    </a>
-                    <a className="dropdown-item d-flex align-items-center" href="#">
-                        <div className="mr-3">
-                            <div className="icon-circle bg-warning">
-                                <i className="fas fa-exclamation-triangle text-white"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="small text-gray-500">December 2, 2019</div>
-                            Spending Alert: We've noticed unusually high spending for your account.
-                  </div>
-                    </a>
+                {alerts && alerts.map((alert,key) =>
+                        <AlertCard alert={alert} key={'topMenu-alert'+key}/>
+                    )}
+
                     <a className="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                 </div>
             </li>
@@ -150,8 +125,8 @@ const Topbar = () => {
                     <h6 className="dropdown-header">
                         Message Center
                 </h6>
-                    {messages && messages.map(message =>
-                        <MessageCard message={message} />
+                    {messages && messages.map((message,key) =>
+                        <MessageCard message={message} key={'topMenu-message-'+key} />
                     )}
                     <a className="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                 </div>
@@ -162,8 +137,8 @@ const Topbar = () => {
             {/*  Nav Item - User Information  */}
             <li className="nav-item dropdown no-arrow">
                 <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span className="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
-                    <img className="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60" />
+                    <span className="mr-2 d-none d-lg-inline text-gray-600 small">{user.name} {user.surename}</span>
+                    <img className="img-profile rounded-circle" src={user.image} />
                 </a>
                 {/*  Dropdown - User Information  */}
                 <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
